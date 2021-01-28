@@ -161,19 +161,25 @@ all return values should be at most two places after the decimal point
           + `grade` receives a `student` object and a `subject` string as arguments and returns '{student.name} receives a perfect score on {subject}'
   */
 class Instructor extends Lambdasian {
-constructor(person) {
-  super(person)
-  this.specialty = person.specialty,
-  this.favLanguage = person.favLanguage,
-  this.catchPhrase = person.catchPhrase
+  constructor(person) {
+    super(person)
+    this.specialty = person.specialty,
+    this.favLanguage = person.favLanguage,
+    this.catchPhrase = person.catchPhrase
+  }
+  demo(subject) {
+    return `today we are learning about ${subject}`
+  }
+  grade(student, subject) {
+    return `${student.name} receives a perfect score on ${subject}`
+  }
+  changeGrade(student) {
+    const rand = Math.floor(Math.random() * 2)
+    rand === 0 ? student.grade += 5 : student.grade -= 5
+    return `your grade is now ${student.grade}`
+  }
 }
-demo(subject) {
-  return `today we are learning about ${subject}`
-}
-grade(student, subject) {
-  return `${student.name} receives a perfect score on ${subject}`
-}
-}
+
 
 // const brit = new Instructor({ name: "Brit Hemming", age: 29, location: "Canada", specialty: "CSS", favLanguage: "Javascript", catchPhrase: "Canada Rocks!" })
 // console.log(brit.speak())
@@ -196,21 +202,13 @@ grade(student, subject) {
           + `sprintChallenge` similar to PRAssignment but returns `student.name has begun sprint challenge on {subject}`
   */
 
-/*
-  STRETCH PROBLEM (no tests!)
-    - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
-    - Now that our students have a grade build out a method on the Instructor (this will be used by _BOTH_ instructors and PM's) that will randomly add or subtract points to a student's grade. _Math.random_ will help.
-    - Add a graduate method to a student.
-      + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
-      + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
-*/
-
 class Student extends Lambdasian {
   constructor(person) {
     super(person)
     this.previousBackground = person.previousBackground,
     this.className = person.className,
-    this.favSubjects = person.favSubjects
+    this.favSubjects = person.favSubjects,
+    this.grade = 70
   }
   listSubjects() {
     const list = this.favSubjects.join(", ")
@@ -222,9 +220,24 @@ class Student extends Lambdasian {
   sprintChallenge(subject) {
     return `${this.name} has begun sprint challenge on ${subject}`
   }
+  graduate() {
+    return this.grade > 70 ? `Congrats you graduate!` : `You need to flex`
+  }
 }
 
-const allan = new Student({ name: "Allan Oliveira", age: 34, location: "Boston", previousBackground: "chef", className: 'web40', favSubjects: ['HTML', 'CSS', 'JS'] })
+// const allan = new Student({ name: "Allan Oliveira", age: 34, location: "Boston", previousBackground: "chef", className: 'web40', favSubjects: ['HTML', 'CSS', 'JS'] })
+// const brit = new Instructor({ name: "Brit Hemming", age: 29, location: "Canada", specialty: "CSS", favLanguage: "Javascript", catchPhrase: "Canada Rocks!" })
+// console.log(brit.changeGrade(allan))
+// console.log(allan.graduate())
+
+/*
+  STRETCH PROBLEM (no tests!)
+    - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
+    - Now that our students have a grade build out a method on the Instructor (this will be used by _BOTH_ instructors and PM's) that will randomly add or subtract points to a student's grade. _Math.random_ will help.
+    - Add a graduate method to a student.
+      + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
+      + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
+*/
 // console.log(allan.listSubjects())
   /*
     TASK 6
