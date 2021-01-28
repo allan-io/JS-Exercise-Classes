@@ -42,9 +42,26 @@ class Airplane {
   */
   
  class Person {
-    
+    constructor(name, age) {
+      this.name = name,
+      this.age = age,
+      this.stomach = []
+    }
+    eat(food) {
+      this.stomach.length < 10 && this.stomach.push(food)
+    }
+    poop() {
+      this.stomach = []
+    }
+    toString() {
+      return `${this.name}, ${this.age}`
+    }
   }
-  
+
+  // const allan = new Person("Allan", 34)
+  // allan.eat('banana')
+  // console.log(allan.stomach)
+
   /*
     TASK 2
       - Write a Car class whose constructor initializes `model` and `milesPerGallon` from arguments.
@@ -58,10 +75,50 @@ class Airplane {
       - A car which runs out of `fuel` while driving can't drive any more distance:
           + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
   */
+
+/*
+On task 2 we now want to set a limit to the amount of gallons the car can have at any given time
+the fill method should also:
+fill the tank to the max if no parameter is passed and return the string `The tank is now full`
+if gallons parameter is passed should add the amount of gallons to the tank and return the string `The tank has {total gallons} gallons right now`
+if the tanks has no more space for gas you should return the string `The tank is now full, and it only took {total amount of gallons} gallons to fill it up`
+all return values should be at most two places after the decimal point
+*/
   
  class Car {
-    
+    constructor(model, milesPerGallon) {
+      this.model = model,
+      this.milesPerGallon = milesPerGallon,
+      this.tank = 0,
+      this.odometer = 0
+    }
+    fill(gallons) {
+      this.tank += gallons
+      return `Added ${gallons} gallons to the tank, and it now contains ${this.tank} gallons inside\n`
+    }
+    drive(distance) {
+      if (this.tank >= (distance / this.milesPerGallon)) {
+        this.odometer += distance
+        this.tank -= (distance / this.milesPerGallon)
+        return `Drove ${distance} miles. The odometer is now ${this.odometer} and the tank has ${this.tank.toFixed(2)} gallons left\n`
+      } else {
+        this.odometer += this.tank * this.milesPerGallon
+        this.tank = 0
+        return `Ran out of fuel at ${this.odometer} miles!\n`
+      }
+    }
   }
+
+  // const car = new Car('bmw', 32)
+
+  // console.log(car.fill(11))
+  // console.log(car.drive(110))
+  // console.log(car.drive(110))
+  // console.log(car.fill(11))
+  // console.log(car.drive(110))
+  // console.log(car.drive(110))
+
+
   
   /*
     TASK 3
@@ -76,8 +133,18 @@ class Airplane {
           + {name} and {location} of course come from the instance's own properties.
   */
  class Lambdasian {
-    
+    constructor(person) {
+      this.name = person.name,
+      this.age = person.age,
+      this.location = person.location
+    }
+    speak() {
+      return `Hello my name is ${this.name}, I am from ${this.location}`
+    }
   }
+
+// const allan = new Lambdasian({name: "Allan Oliveira", age: 34, location: "Boston"})
+// console.log(allan.speak())
   
   /*
     TASK 4
@@ -93,9 +160,26 @@ class Airplane {
           + `demo` receives a `subject` string as an argument and returns the phrase 'Today we are learning about {subject}' where subject is the param passed in.
           + `grade` receives a `student` object and a `subject` string as arguments and returns '{student.name} receives a perfect score on {subject}'
   */
- class Instructor {
+class Instructor extends Lambdasian {
+constructor(person) {
+  super(person)
+  this.specialty = person.specialty,
+  this.favLanguage = person.favLanguage,
+  this.catchPhrase = person.catchPhrase
+}
+demo(subject) {
+  return `today we are learning about ${subject}`
+}
+grade(student, subject) {
+  return `${student.name} receives a perfect score on ${subject}`
+}
+}
 
- }
+// const brit = new Instructor({ name: "Brit Hemming", age: 29, location: "Canada", specialty: "CSS", favLanguage: "Javascript", catchPhrase: "Canada Rocks!" })
+// console.log(brit.speak())
+// console.log(brit.demo('Array Methods'))
+// console.log(brit.grade({name: "Allan"}, 'Javascript fundamentals'))
+
   /*
     TASK 5
       - Write a Student class extending Lambdasian.
@@ -111,10 +195,37 @@ class Airplane {
           + `PRAssignment` a method that receives a subject as an argument and returns `student.name has submitted a PR for {subject}`
           + `sprintChallenge` similar to PRAssignment but returns `student.name has begun sprint challenge on {subject}`
   */
- class Student {
-     
- }
-  
+
+/*
+  STRETCH PROBLEM (no tests!)
+    - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
+    - Now that our students have a grade build out a method on the Instructor (this will be used by _BOTH_ instructors and PM's) that will randomly add or subtract points to a student's grade. _Math.random_ will help.
+    - Add a graduate method to a student.
+      + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
+      + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
+*/
+
+class Student extends Lambdasian {
+  constructor(person) {
+    super(person)
+    this.previousBackground = person.previousBackground,
+    this.className = person.className,
+    this.favSubjects = person.favSubjects
+  }
+  listSubjects() {
+    const list = this.favSubjects.join(", ")
+    return `Loving ${list}!`
+  }
+  PRAssignment(subject) {
+    return `${this.name} has submitted a PR for ${subject}`
+  }
+  sprintChallenge(subject) {
+    return `${this.name} has begun sprint challenge on ${subject}`
+  }
+}
+
+const allan = new Student({ name: "Allan Oliveira", age: 34, location: "Boston", previousBackground: "chef", className: 'web40', favSubjects: ['HTML', 'CSS', 'JS'] })
+// console.log(allan.listSubjects())
   /*
     TASK 6
       - Write a ProjectManager class extending Instructor.
@@ -128,17 +239,33 @@ class Airplane {
           + `standUp` a method that takes in a slack channel and returns `{name} announces to {channel}, @channel standy times!`
           + `debugsCode` a method that takes in a student object and a subject and returns `{name} debugs {student.name}'s code on {subject}`
   */
- class ProjectManager {
-     
- }
-  /*
-    STRETCH PROBLEM (no tests!)
-      - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
-      - Now that our students have a grade build out a method on the Instructor (this will be used by _BOTH_ instructors and PM's) that will randomly add or subtract points to a student's grade. _Math.random_ will help.
-      - Add a graduate method to a student.
-        + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
-        + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
-  */
+class ProjectManager extends Instructor {
+  constructor(person) {
+    super(person)
+    this.gradClassName = person.gradClassName,
+    this.favInstructor = person.favInstructor 
+  }
+  standUp(channel) {
+    return `${this.name} announces to ${channel}, @channel standy times!`
+  }
+  debugsCode(student, subject) {
+    return `${this.name} debugs ${student.name}'s code on ${subject}`
+  }
+}
+
+// const john = new ProjectManager({ 
+//   name: "John Dough", 
+//   age: 29, location: "Russia", 
+//   specialty: "React", 
+//   favLanguage: "C++", 
+//   catchPhrase: "You know nothing John Dough", 
+//   gradClassName: "web11",
+//   favInstructor: "Tom Brady"  
+// })
+
+// console.log(john.standUp("web40_help"))
+// console.log(john.debugsCode(allan, "Express"))
+  
 
 
   //End of Challenge
